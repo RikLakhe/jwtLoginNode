@@ -13,8 +13,6 @@ const users = [
     {id: 2, userName: "guest", password: "admin2"},
     {id: 3, userName: "new", password: "admin3"},
 ]
-const usingToken = []
-const loginedUser = []
 
 app.post("/login", (req, res) => {
     let loginTime = new Date();
@@ -33,26 +31,14 @@ app.post("/login", (req, res) => {
                 .status(401)
                 .send("user doesn not exist")
             return;
-
         }
 
-        id = user.id;
-
-        if (!loginedUser.includes(id)) {
-            const token = jwt.sign({
-                sub: user.id,
-                userName: user.userName,
-                loginTime:loginTime
-            }, "mysupersecretkey", {
-                expiresIn: "3 hours"
-            })
-            usedToken = token;
-            usingToken.push({id, usedToken,loginTime});
-            loginedUser.push(id);
-        }
-
-        console.log(usingToken)
-        console.log(loginedUser)
+        const token = jwt.sign({
+            sub: user.id,
+            userName: user.userName,
+        }, "mysupersecretkey", {
+            expiresIn: "3 hours"
+        })
 
         res
             .status(200)
